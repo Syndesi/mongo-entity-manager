@@ -31,8 +31,18 @@ class DocumentFeatureTest extends FeatureTestCase
         $em->flush();
         $this->assertCollectionDocumentCount('test', 1);
 
+        $foundDocument = $em->getOneByIdentifier('test', 1236);
+        $this->assertSame('test', $foundDocument->getCollection());
+        $this->assertSame(1236, $foundDocument->getIdentifier());
+        $this->assertSame('some value', $foundDocument->getProperty('someKey'));
+        $this->assertSame('some value', $foundDocument->getProperty('otherPropertyName'));
+        $this->assertSame('hello world update :D', $foundDocument->getProperty('changed'));
+
         $em->delete($document);
         $em->flush();
         $this->assertCollectionDocumentCount('test', 0);
+
+        $unfoundDocument = $em->getOneByIdentifier('test', 1236);
+        $this->assertNull($unfoundDocument);
     }
 }

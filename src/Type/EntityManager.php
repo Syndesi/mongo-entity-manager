@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Syndesi\MongoEntityManager\Type;
 
 use MongoDB\Client;
+use MongoDB\Model\BSONDocument;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Syndesi\MongoDataStructures\Contract\DocumentInterface;
+use Syndesi\MongoDataStructures\Type\Document;
 use Syndesi\MongoEntityManager\Contract\EntityManagerInterface;
 use Syndesi\MongoEntityManager\Event\PostFlushEvent;
 use Syndesi\MongoEntityManager\Event\PreFlushEvent;
@@ -87,7 +89,7 @@ class EntityManager implements EntityManagerInterface
                         '$set' => $element->getProperties(),
                     ],
                     [
-                        'upsert' => true
+                        'upsert' => true,
                     ]
                 );
             }
@@ -112,6 +114,29 @@ class EntityManager implements EntityManagerInterface
         return $this;
     }
 
+    public function getOneByIdentifier(string $collection, int|string $identifier): ?DocumentInterface
+    {
+        /**
+         * @var $res BSONDocument
+         */
+        $res = $this->client->selectDatabase($this->database)->selectCollection($collection)
+            ->findOne(
+                [
+                    '_id' => $identifier,
+                ]
+            );
+        if (!$res) {
+            return null;
+        }
+        $properties = $res->getArrayCopy();
+        unset($properties['_id']);
+
+        return (new Document())
+            ->addProperties($properties)
+            ->setIdentifier($res->offsetGet('_id'))
+            ->setCollection($collection);
+    }
+
     public function clear(): self
     {
         $this->queue = [];
@@ -122,5 +147,10 @@ class EntityManager implements EntityManagerInterface
     public function getClient(): Client
     {
         return $this->client;
+    }
+
+    public function getDatabase(): ?string
+    {
+        return $this->database;
     }
 }
