@@ -128,7 +128,8 @@ class EntityManager implements EntityManagerInterface
         if (!$res) {
             return null;
         }
-        $properties = $res->getArrayCopy();
+        $properties = \MongoDB\BSON\fromPHP($res);
+        $properties = (array) \MongoDB\BSON\toPHP($properties);
         unset($properties['_id']);
 
         return (new Document())

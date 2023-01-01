@@ -26,6 +26,7 @@ class DocumentFeatureTest extends FeatureTestCase
         $this->assertCollectionDocumentCount('test', 1);
 
         $document->addProperty('changed', 'hello world update :D');
+        $document->addProperty('array', [1, 2, 3, 4]);
 
         $em->merge($document);
         $em->flush();
@@ -37,6 +38,7 @@ class DocumentFeatureTest extends FeatureTestCase
         $this->assertSame('some value', $foundDocument->getProperty('someKey'));
         $this->assertSame('some value', $foundDocument->getProperty('otherPropertyName'));
         $this->assertSame('hello world update :D', $foundDocument->getProperty('changed'));
+        $this->assertSame([1, 2, 3, 4], $foundDocument->getProperty('array'));
 
         $em->delete($document);
         $em->flush();
