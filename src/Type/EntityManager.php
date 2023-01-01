@@ -85,6 +85,9 @@ class EntityManager implements EntityManagerInterface
                     ],
                     [
                         '$set' => $element->getProperties(),
+                    ],
+                    [
+                        'upsert' => true
                     ]
                 );
             }
