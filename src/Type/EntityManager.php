@@ -78,9 +78,25 @@ class EntityManager implements EntityManagerInterface
             $collection = $this->client->selectDatabase($this->database)->selectCollection($element->getCollection());
 
             if (ActionType::CREATE === $actionMongoElement->getAction()) {
+                $this->logger?->debug(sprintf(
+                    "Creating element of type %s",
+                    get_class($element)
+                ), [
+                    'collection' => $element->getCollection(),
+                    'identifier' => $element->getIdentifier(),
+                    'properties' => $element->getProperties(),
+                ]);
                 $collection->insertOne($element->getProperties());
             }
             if (ActionType::MERGE === $actionMongoElement->getAction()) {
+                $this->logger?->debug(sprintf(
+                    "Updating element of type %s",
+                    get_class($element)
+                ), [
+                    'collection' => $element->getCollection(),
+                    'identifier' => $element->getIdentifier(),
+                    'properties' => $element->getProperties(),
+                ]);
                 $collection->updateOne(
                     [
                         '_id' => $element->getIdentifier(),
@@ -94,6 +110,13 @@ class EntityManager implements EntityManagerInterface
                 );
             }
             if (ActionType::DELETE === $actionMongoElement->getAction()) {
+                $this->logger?->debug(sprintf(
+                    "Deleting element of type %s",
+                    get_class($element)
+                ), [
+                    'collection' => $element->getCollection(),
+                    'identifier' => $element->getIdentifier(),
+                ]);
                 $collection->deleteOne(['_id' => $element->getIdentifier()]);
             }
 
