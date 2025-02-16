@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Syndesi\MongoEntityManager\Tests\Helper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Syndesi\MongoDataStructures\Type\Document;
 use Syndesi\MongoEntityManager\Event\DocumentPostCreateEvent;
@@ -18,7 +19,7 @@ use Syndesi\MongoEntityManager\Type\ActionType;
 
 class LifecycleEventHandlerTest extends TestCase
 {
-    public function provideTestCases()
+    public static function provideTestCases()
     {
         return [
             [
@@ -66,9 +67,7 @@ class LifecycleEventHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTestCases
-     */
+    #[DataProvider("provideTestCases")]
     public function testCases(ActionMongoElement $actionMongoElement, bool $isPre, array $expectedEvents): void
     {
         $actualEvents = LifecycleEventHelper::getLifecycleEventForMongoActionElement($actionMongoElement, $isPre);
