@@ -13,6 +13,7 @@ use Syndesi\MongoDataStructures\Type\Document;
 use Syndesi\MongoEntityManager\Contract\EntityManagerInterface;
 use Syndesi\MongoEntityManager\Event\PostFlushEvent;
 use Syndesi\MongoEntityManager\Event\PreFlushEvent;
+use Syndesi\MongoEntityManager\Exception\MongoEntityManagerException;
 use Syndesi\MongoEntityManager\Helper\LifecycleEventHelper;
 
 class EntityManager implements EntityManagerInterface
@@ -24,7 +25,7 @@ class EntityManager implements EntityManagerInterface
      */
     private array $queue = [];
     private EventDispatcherInterface $dispatcher;
-    private ?string $database = null;
+    private string $database;
 
     public function __construct(string $database, Client $client, EventDispatcherInterface $dispatcher, ?LoggerInterface $logger = null)
     {
@@ -75,14 +76,18 @@ class EntityManager implements EntityManagerInterface
             }
 
             $element = $actionMongoElement->getElement();
-            $collection = $this->client->selectDatabase($this->database)->selectCollection($element->getCollection());
+            $collectionIdentifier = $element->getCollection();
+            if (null === $collectionIdentifier) {
+                throw new MongoEntityManagerException("Mongo action element must have property 'collection' set to non null value.");
+            }
+            $collection = $this->client->selectDatabase($this->database)->selectCollection($collectionIdentifier);
 
             if (ActionType::CREATE === $actionMongoElement->getAction()) {
                 $this->logger?->debug(sprintf(
                     "Creating element of type %s",
                     get_class($element)
                 ), [
-                    'collection' => $element->getCollection(),
+                    'collection' => $collectionIdentifier,
                     'identifier' => $element->getIdentifier(),
                     'properties' => $element->getProperties(),
                 ]);
@@ -93,7 +98,7 @@ class EntityManager implements EntityManagerInterface
                     "Updating element of type %s",
                     get_class($element)
                 ), [
-                    'collection' => $element->getCollection(),
+                    'collection' => $collectionIdentifier,
                     'identifier' => $element->getIdentifier(),
                     'properties' => $element->getProperties(),
                 ]);
@@ -114,7 +119,7 @@ class EntityManager implements EntityManagerInterface
                     "Deleting element of type %s",
                     get_class($element)
                 ), [
-                    'collection' => $element->getCollection(),
+                    'collection' => $collectionIdentifier,
                     'identifier' => $element->getIdentifier(),
                 ]);
                 $collection->deleteOne(['_id' => $element->getIdentifier()]);
@@ -139,25 +144,29 @@ class EntityManager implements EntityManagerInterface
 
     public function getOneByIdentifier(string $collection, int|string $identifier): ?DocumentInterface
     {
-        /**
-         * @var $res BSONDocument
-         */
         $res = $this->client->selectDatabase($this->database)->selectCollection($collection)
             ->findOne(
                 [
                     '_id' => $identifier,
                 ]
             );
-        if (!$res) {
+        if (null === $res) {
             return null;
         }
-        $properties = \MongoDB\BSON\fromPHP($res);
-        $properties = (array) \MongoDB\BSON\toPHP($properties);
+        if (!($res instanceof BSONDocument)) {
+            throw new MongoEntityManagerException(sprintf("Mongo returned non BSON document of the type '%s'.", is_object($res) ? get_class($res) : gettype($res)));
+        }
+        $properties = $res->getArrayCopy();
         unset($properties['_id']);
+
+        $documentIdentifier = $res->offsetGet('_id');
+        if (null === $documentIdentifier) {
+            throw new MongoEntityManagerException("Mongo document does not contain '_id' property.");
+        }
 
         return (new Document())
             ->addProperties($properties)
-            ->setIdentifier($res->offsetGet('_id'))
+            ->setIdentifier($documentIdentifier)
             ->setCollection($collection);
     }
 

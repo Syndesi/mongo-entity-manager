@@ -45,9 +45,6 @@ class LifecycleEventHelper
                     $eventClass = $eventClass[$actionMongoElement->getAction()->name];
 
                     return [
-                        /**
-                         * @phpstan-ignore-next-line
-                         */
                         new $eventClass($actionMongoElement->getElement()),
                     ];
                 }

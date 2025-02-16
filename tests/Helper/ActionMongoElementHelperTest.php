@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Syndesi\MongoEntityManager\Tests\Helper;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Syndesi\MongoDataStructures\Type\Document;
 use Syndesi\MongoEntityManager\Helper\ActionMongoElementHelper;
@@ -13,7 +14,7 @@ use Syndesi\MongoEntityManager\Type\ActionType;
 
 class ActionMongoElementHelperTest extends TestCase
 {
-    public function provideActionMongoElementWithType()
+    public static function provideActionMongoElementWithType()
     {
         return [
             [
@@ -23,9 +24,7 @@ class ActionMongoElementHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideActionMongoElementWithType
-     */
+    #[DataProvider("provideActionMongoElementWithType")]
     public function testGetTypeFromActionMongoElement(ActionMongoElement $object, ActionMongoElementType $expectedType): void
     {
         $foundType = ActionMongoElementHelper::getTypeFromActionMongoElement($object);
