@@ -8,5 +8,6 @@ use Syndesi\MongoDataStructures\Contract\DocumentInterface;
 
 interface PostDeleteEventInterface extends LifecycleEventInterface
 {
+    #[\Override]
     public function getElement(): DocumentInterface;
 }

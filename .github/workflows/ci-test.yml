@@ -75,7 +75,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.2', '8.3', '8.4']
+        php-version: ['8.3', '8.4', '8.5']
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
@@ -90,34 +90,34 @@ jobs:
       - run: cat ./tests/test.log
         shell: bash
 
-  test-unit-coverage:
-    runs-on: ubuntu-latest
-    name: "Running unit test coverage"
-    env:
-      XDEBUG_MODE: coverage
-    timeout-minutes: 5
-    needs:
-      - test-unit
-    steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          extensions: xdebug
-          tools: composer:v2
-      - run: composer install --ignore-platform-req=php --quiet
-        shell: bash
-      - run: composer test:coverage:xml
-        shell: bash
-      - uses: paambaati/codeclimate-action@v9.0.0
-        env:
-          CC_TEST_REPORTER_ID: e0b199e87a2813189267e9baa3bf44d5354447ca73e8a4b2d8c027360b05523a
-        with:
-          coverageLocations: coverage.xml:clover
-      - uses: actions/upload-artifact@v4
-        with:
-          name: coverage.xml
-          path: coverage.xml
+#  test-unit-coverage:
+#    runs-on: ubuntu-latest
+#    name: "Running unit test coverage"
+#    env:
+#      XDEBUG_MODE: coverage
+#    timeout-minutes: 5
+#    needs:
+#      - test-unit
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: '8.4'
+#          extensions: xdebug
+#          tools: composer:v2
+#      - run: composer install --ignore-platform-req=php --quiet
+#        shell: bash
+#      - run: composer test:coverage:xml
+#        shell: bash
+#      - uses: paambaati/codeclimate-action@v9.0.0
+#        env:
+#          CC_TEST_REPORTER_ID: e0b199e87a2813189267e9baa3bf44d5354447ca73e8a4b2d8c027360b05523a
+#        with:
+#          coverageLocations: coverage.xml:clover
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: coverage.xml
+#          path: coverage.xml
 
   test-mutant:
     runs-on: ubuntu-latest

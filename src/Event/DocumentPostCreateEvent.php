@@ -16,6 +16,7 @@ class DocumentPostCreateEvent implements DocumentPostCreateEventInterface
     {
     }
 
+    #[\Override]
     public function getElement(): DocumentInterface
     {
         return $this->element;

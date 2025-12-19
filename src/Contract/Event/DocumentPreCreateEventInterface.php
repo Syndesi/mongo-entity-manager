@@ -8,5 +8,6 @@ use Syndesi\MongoDataStructures\Contract\DocumentInterface;
 
 interface DocumentPreCreateEventInterface extends PreCreateEventInterface
 {
+    #[\Override]
     public function getElement(): DocumentInterface;
 }

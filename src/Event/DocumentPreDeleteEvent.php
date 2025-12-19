@@ -16,6 +16,7 @@ class DocumentPreDeleteEvent implements DocumentPreDeleteEventInterface
     {
     }
 
+    #[\Override]
     public function getElement(): DocumentInterface
     {
         return $this->element;

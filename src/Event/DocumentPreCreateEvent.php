@@ -16,6 +16,7 @@ class DocumentPreCreateEvent implements DocumentPreCreateEventInterface
     {
     }
 
+    #[\Override]
     public function getElement(): DocumentInterface
     {
         return $this->element;

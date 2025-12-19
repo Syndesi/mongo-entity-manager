@@ -15,11 +15,13 @@ class ActionMongoElement implements ActionMongoElementInterface
     ) {
     }
 
+    #[\Override]
     public function getAction(): ActionType
     {
         return $this->actionType;
     }
 
+    #[\Override]
     public function getElement(): DocumentInterface
     {
         return $this->element;

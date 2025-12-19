@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Syndesi\MongoEntityManager\Tests\FeatureTest;
 
+use MongoDB\Model\BSONArray;
 use Syndesi\MongoDataStructures\Type\Document;
 use Syndesi\MongoEntityManager\Tests\FeatureTestCase;
 use Syndesi\MongoEntityManager\Type\EntityManager;
@@ -38,7 +39,9 @@ class DocumentFeatureTest extends FeatureTestCase
         $this->assertSame('some value', $foundDocument->getProperty('someKey'));
         $this->assertSame('some value', $foundDocument->getProperty('otherPropertyName'));
         $this->assertSame('hello world update :D', $foundDocument->getProperty('changed'));
-        $this->assertSame([1, 2, 3, 4], $foundDocument->getProperty('array'));
+        $arrayProperty = $foundDocument->getProperty('array');
+        $this->assertInstanceOf(BSONArray::class, $arrayProperty);
+        $this->assertSame([1, 2, 3, 4], $arrayProperty->bsonSerialize());
 
         $em->delete($document);
         $em->flush();

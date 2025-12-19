@@ -16,6 +16,7 @@ class DocumentPostDeleteEvent implements DocumentPostDeleteEventInterface
     {
     }
 
+    #[\Override]
     public function getElement(): DocumentInterface
     {
         return $this->element;
