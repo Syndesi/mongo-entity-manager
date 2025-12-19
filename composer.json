@@ -1,6 +1,6 @@
 {
     "name": "syndesi/mongo-entity-manager",
-    "description": "Provides an entity manager for Mongo",
+    "description": "Provides an entity manager for MongoDB",
     "type": "library",
     "homepage": "https://syndesi.github.io/mongo-entity-manager/#/",
     "license": "MIT",
@@ -19,7 +19,7 @@
     "prefer-stable": true,
     "require": {
         "php": "^8.1",
-        "mongodb/mongodb": "^1.20",
+        "mongodb/mongodb": "^2.1",
         "psr/log": "^3.0",
         "psr/event-dispatcher": "^1.0",
         "syndesi/mongo-data-structures": "^0.1"
@@ -38,10 +38,10 @@
     "require-dev": {
         "vimeo/psalm": "^6.2",
         "phpstan/phpstan": "^2.1",
-        "phpunit/php-code-coverage": "^11",
-        "infection/infection": "^0.29.8",
+        "phpunit/php-code-coverage": "^12",
+        "infection/infection": "^0.31",
         "friendsofphp/php-cs-fixer": "^3.48",
-        "phpunit/phpunit": "^11",
+        "phpunit/phpunit": "^12",
         "phpbench/phpbench": "^1.2",
         "crell/tukio": "^2.0",
         "monolog/monolog": "^3.2",
@@ -62,8 +62,7 @@
         "psalm:fix": "php vendor/bin/psalm --alter --issues=MissingReturnType,InvalidReturnType,InvalidNullableReturnType,MismatchingDocblockParamType",
         "phpstan": "vendor/bin/phpstan",
         "yml:lint": "docker run --rm -it -v $(pwd):/data cytopia/yamllint .",
-        "markdown:lint": "docker run --rm -v $(pwd):/work tmknom/markdownlint '**/*.md' --config tests/.markdownlintrc --ignore vendor --ignore CHANGELOG.md --ignore var --ignore tmp",
-        "docs:serve": "docker run --rm -d -p 3000:3000 -v $(pwd)/docs:/docs sujaykumarh/docsify serve"
+        "markdown:lint": "docker run --rm -v $(pwd):/work tmknom/markdownlint '**/*.md' --config tests/.markdownlintrc --ignore vendor --ignore CHANGELOG.md --ignore var --ignore tmp"
     },
     "config": {
         "allow-plugins": {

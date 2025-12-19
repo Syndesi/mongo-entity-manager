@@ -16,6 +16,7 @@ class DocumentPostMergeEvent implements DocumentPostMergeEventInterface
     {
     }
 
+    #[\Override]
     public function getElement(): DocumentInterface
     {
         return $this->element;

@@ -16,6 +16,7 @@ class DocumentPreMergeEvent implements DocumentPreMergeEventInterface
     {
     }
 
+    #[\Override]
     public function getElement(): DocumentInterface
     {
         return $this->element;

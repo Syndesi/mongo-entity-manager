@@ -35,7 +35,8 @@ class EntityManager implements EntityManagerInterface
         $this->logger = $logger;
     }
 
-    public function add(ActionType $actionType, DocumentInterface $element): self
+    #[\Override]
+    public function add(ActionType $actionType, DocumentInterface $element): static
     {
         $actionMongoElement = new ActionMongoElement($actionType, $element);
         $this->queue[] = $actionMongoElement;
@@ -43,28 +44,32 @@ class EntityManager implements EntityManagerInterface
         return $this;
     }
 
-    public function create(DocumentInterface $element): self
+    #[\Override]
+    public function create(DocumentInterface $element): static
     {
         $this->add(ActionType::CREATE, $element);
 
         return $this;
     }
 
-    public function merge(DocumentInterface $element): self
+    #[\Override]
+    public function merge(DocumentInterface $element): static
     {
         $this->add(ActionType::MERGE, $element);
 
         return $this;
     }
 
-    public function delete(DocumentInterface $element): self
+    #[\Override]
+    public function delete(DocumentInterface $element): static
     {
         $this->add(ActionType::DELETE, $element);
 
         return $this;
     }
 
-    public function flush(): self
+    #[\Override]
+    public function flush(): static
     {
         $this->logger?->debug("Dispatching PreFlushEvent");
         $this->dispatcher->dispatch(new PreFlushEvent());
@@ -170,13 +175,15 @@ class EntityManager implements EntityManagerInterface
             ->setCollection($collection);
     }
 
-    public function clear(): self
+    #[\Override]
+    public function clear(): static
     {
         $this->queue = [];
 
         return $this;
     }
 
+    #[\Override]
     public function getClient(): Client
     {
         return $this->client;

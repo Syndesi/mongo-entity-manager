@@ -10,17 +10,17 @@ use Syndesi\MongoEntityManager\Type\ActionType;
 
 interface EntityManagerInterface
 {
-    public function add(ActionType $actionType, DocumentInterface $element): self;
+    public function add(ActionType $actionType, DocumentInterface $element): static;
 
-    public function create(DocumentInterface $element): self;
+    public function create(DocumentInterface $element): static;
 
-    public function merge(DocumentInterface $element): self;
+    public function merge(DocumentInterface $element): static;
 
-    public function delete(DocumentInterface $element): self;
+    public function delete(DocumentInterface $element): static;
 
-    public function flush(): self;
+    public function flush(): static;
 
-    public function clear(): self;
+    public function clear(): static;
 
     public function getClient(): Client;
 }

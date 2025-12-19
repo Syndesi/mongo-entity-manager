@@ -8,5 +8,6 @@ use Syndesi\MongoDataStructures\Contract\DocumentInterface;
 
 interface DocumentPostMergeEventInterface extends PostMergeEventInterface
 {
+    #[\Override]
     public function getElement(): DocumentInterface;
 }

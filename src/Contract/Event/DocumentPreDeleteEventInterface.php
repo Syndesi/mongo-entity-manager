@@ -8,5 +8,6 @@ use Syndesi\MongoDataStructures\Contract\DocumentInterface;
 
 interface DocumentPreDeleteEventInterface extends PreDeleteEventInterface
 {
+    #[\Override]
     public function getElement(): DocumentInterface;
 }
